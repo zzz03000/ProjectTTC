@@ -2,16 +2,19 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Heart : MonoBehaviour {
+public class Heart : MonoBehaviour
+{
 
 	[SerializeField]
 	Image heartImage = null;
 
-	public void show () {
+	public void show ()
+	{
 		heartImage.enabled = true;
 	}
 
-	public void hide () {
+	public void hide ()
+	{
 		heartImage.enabled = false;
 	}
 }

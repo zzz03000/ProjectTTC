@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Block_OnFalling : MonoBehaviour {
+public class Block_OnFalling : MonoBehaviour
+{
 
 	[SerializeField]
 	private float m_FallingSpeed = 1.5f;
@@ -24,14 +25,16 @@ public class Block_OnFalling : MonoBehaviour {
 
 	private bool repeatGeneration = true;
 
-	void Awake(){
+	void Awake()
+	{
 		Rigidbody2D myRB2D = GetComponent<Rigidbody2D> ();
 		myRB2D.gravityScale = 0f;
 		m_GameManager = GameObject.Find ("GameManager");
 	}
 
 	// Update is called once per frame
-	void FixedUpdate (){
+	void FixedUpdate ()
+	{
 		Vector3 position = transform.position;
 		position += m_ActualFallingSpeed * Vector3.down * Time.fixedDeltaTime;
 		transform.position = position;
@@ -39,49 +42,63 @@ public class Block_OnFalling : MonoBehaviour {
 		m_ActualFallingSpeed = m_FallingSpeed;
 		position = transform.position;
 
-		if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
-			if (countStopFramesStep > m_StopFramesStep) {
+		if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+		{
+			if (countStopFramesStep > m_StopFramesStep)
+			{
 				position.x -= m_MovementSpeed * Time.deltaTime;
 				gameObject.transform.position = position;
 				countStopFramesStep = 0;
-			} else {
+			}
+			else
+			{
 				countStopFramesStep++;
 			}
 		}
 
-		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
-			if (countStopFramesStep > m_StopFramesStep) {
+		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+		{
+			if (countStopFramesStep > m_StopFramesStep)
+			{
 				position.x += m_MovementSpeed * Time.deltaTime;
 				gameObject.transform.position = position;
 				countStopFramesStep = 0;
-			} else {
+			}
+			else
+			{
 				countStopFramesStep++;
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.Mouse0)) {
+		if (Input.GetKeyDown (KeyCode.Mouse0))
+		{
 			gameObject.transform.Rotate (new Vector3 (0f, 0f, +90f));
 		}		
 
-		if (Input.GetKeyDown (KeyCode.Mouse1)) {
+		if (Input.GetKeyDown (KeyCode.Mouse1))
+		{
 			gameObject.transform.Rotate (new Vector3 (0f, 0f, -90f));
 		}
 
-		if (Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+		if (Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+		{
 			m_ActualFallingSpeed *= m_Acceleration;
 		}
 	}
 
-	void OnCollisionEnter2D (Collision2D other){
+	void OnCollisionEnter2D (Collision2D other)
+	{
 		if (m_Collided)
 			return;
 
 		m_Collided = true;
 
-		if(other.gameObject.tag.Equals("Block") || other.gameObject.name.Equals("Base") || other.gameObject.tag.Equals("Limite")){
+		if(other.gameObject.tag.Equals("Block") || other.gameObject.name.Equals("Base") || other.gameObject.tag.Equals("Limite"))
+		{
 			Rigidbody2D myRB2D = GetComponent<Rigidbody2D> ();
 			myRB2D.gravityScale = 1f;
-			if(m_GameManager!=null && repeatGeneration){
+			if(m_GameManager!=null && repeatGeneration)
+			{
 				Blocks_Generator generator = m_GameManager.GetComponent<Blocks_Generator>();
 				generator.GenerateBlock ();
 				repeatGeneration = false;

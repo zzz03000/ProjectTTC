@@ -10,16 +10,19 @@ public class UIController : MonoBehaviour {
 	private Button m_PlayButton = null;
 
 	private void OnEnable(){
-		if (m_CloseButton != null) {
+		if (m_CloseButton != null) 
+		{
 			m_CloseButton.onClick.AddListener (OnCloseButtonClicked);
 		}
 
-		if (m_PlayButton != null) {
+		if (m_PlayButton != null) 
+		{
 			m_PlayButton.onClick.AddListener (OnPlayButtonClicked);
 		}
 	}
 
-	private void OnDisable(){
+	private void OnDisable()
+	{
 		if (m_CloseButton != null) {
 			m_CloseButton.onClick.AddListener (OnCloseButtonClicked);
 		}
@@ -29,11 +32,17 @@ public class UIController : MonoBehaviour {
 		}
 	}
 		
-	private void OnCloseButtonClicked(){
-		Application.Quit();
-	}
+	private void OnCloseButtonClicked()
+	{
+		#if UNITY_EDITOR
+				UnityEditor.EditorApplication.isPlaying = false;
+		#else
+				Application.Quit();
+		#endif
+    }
 
-	private void OnPlayButtonClicked(){
+    private void OnPlayButtonClicked()
+	{
 		SceneManager.LoadScene("Game", LoadSceneMode.Single);
 	}
 }
