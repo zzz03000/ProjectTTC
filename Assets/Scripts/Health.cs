@@ -12,7 +12,9 @@ public class Health : MonoBehaviour
 	void Start ()
 	{
 		if (hearts == null)
+		{
 			return;
+		}
 
 		numHearts = hearts.Length;
 	}

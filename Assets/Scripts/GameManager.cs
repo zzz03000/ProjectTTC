@@ -31,11 +31,15 @@ public class GameManager : MonoBehaviour
 	{
 		m_GameRunning = true;
 
-		if ( m_GameOver != null )
+		if (m_GameOver != null)
+		{
 			m_GameOver.enabled = false;
+		}
 
-		if ( m_Winner != null )
-			m_Winner.enabled = false;	
+		if (m_Winner != null)
+		{
+			m_Winner.enabled = false;
+		}
 
 
 		if (m_Health == null)
@@ -64,11 +68,17 @@ public class GameManager : MonoBehaviour
 			}
 
 			if (m_timeBeforeLosingAnotherLife <= 0)
+			{
 				m_canYouLoseLife = true;
+			}
 			else
+			{
 				m_timeBeforeLosingAnotherLife -= Time.deltaTime;
+			}
 			
-		} else {
+		}
+		else
+		{
 			EndGame ();
 		}
 
@@ -106,11 +116,16 @@ public class GameManager : MonoBehaviour
 		if (m_Victory)
 		{
 			if (m_Winner != null)
+			{
 				m_Winner.enabled = true;
-		} else
+			}
+		}
+		else
 		{
 			if (m_GameOver != null)
+			{
 				m_GameOver.enabled = true;
+			}
 		}
 		Time.timeScale = 0f;
 

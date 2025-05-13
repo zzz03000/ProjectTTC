@@ -10,7 +10,9 @@ public class PauseMenuLauncher : MonoBehaviour
 	void Start ()
 	{
 		if (m_PauseMenu != null)
-			m_PauseMenu.SetActive (false);
+		{
+			m_PauseMenu.SetActive(false);
+		}
 	}
 	
 	// Update is called once per frame

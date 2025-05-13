@@ -15,7 +15,9 @@ public class PauseMenuController : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
             Resume();
+        }
     }
 
     private void OnEnable()
@@ -64,10 +66,10 @@ public class PauseMenuController : MonoBehaviour
 
     private void Quit()
     {
-        #if UNITY_EDITOR
-             UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
              Application.Quit();
-        #endif
+#endif
     }
 }

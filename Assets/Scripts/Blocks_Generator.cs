@@ -19,8 +19,12 @@ public class Blocks_Generator : MonoBehaviour
 			bool ready = true;
 
 			for (int index = 0; index < NUM_BLOCKS && ready; ++index)
-				if (blocks [index] == null)
+			{
+				if (blocks[index] == null)
+				{
 					ready = false;
+				}
+            }
 
 			if (ready)
 			{
