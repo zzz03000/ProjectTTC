@@ -93,7 +93,7 @@ public class Block_OnFalling : MonoBehaviour
 
 		m_Collided = true;
 
-		if(other.gameObject.tag.Equals("Block") || other.gameObject.name.Equals("Base") || other.gameObject.tag.Equals("Limite"))
+		if(other.gameObject.tag.Equals("Block") || other.gameObject.name.Equals("Base") || other.gameObject.tag.Equals("P1_Limite") || other.gameObject.tag.Equals("P2_Limite"))
 		{
 			Rigidbody2D myRB2D = GetComponent<Rigidbody2D> ();
 			myRB2D.gravityScale = 1f;

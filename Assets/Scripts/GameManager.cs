@@ -6,43 +6,63 @@ public class GameManager : MonoBehaviour
 {
 
 	[SerializeField]
-	private Image m_GameOver = null;
+	private Image P1_m_GameOver = null;
 	[SerializeField]
-	private Image m_Winner = null;
+	private Image P1_m_Winner = null;
+    [SerializeField]
+    private Image P2_m_GameOver = null;
+    [SerializeField]
+    private Image P2_m_Winner = null;
 
-	[SerializeField]	
-	private int m_numLifes = 3;			// numero di vite del giocatore
+    [SerializeField]	
+	private int P1_m_numLifes = 3;          // numero di vite del giocatore
+    [SerializeField]
+    private int P2_m_numLifes = 3;          // numero di vite del giocatore
 
-	[SerializeField]
+    [SerializeField]
 	private float m_safeTime = 2;		// tempo prima di perdere un'altra vita
 
 	[SerializeField]
-	private Health m_Health = null;
+	private Health p1_m_Health = null;
+	[SerializeField]
+    private Health p2_m_Health = null;
 
-	private float m_timeBeforeLosingAnotherLife = 0;	// usato in combinazione con m_safeTime
-	private bool m_canYouLoseLife = true;				// usato in combinazione con m_safeTime
+    private float P1_m_timeBeforeLosingAnotherLife = 0; // usato in combinazione con m_safeTime
+    private float P2_m_timeBeforeLosingAnotherLife = 0; // usato in combinazione con m_safeTime
+    private bool P1_m_canYouLoseLife = true;                // usato in combinazione con m_safeTime
+    private bool P2_m_canYouLoseLife = true;                // usato in combinazione con m_safeTime
 
-	// ------------------------------------
+    // ------------------------------------
 
-	private bool m_GameRunning = false;
-	private bool m_Victory = false;
+    private bool m_GameRunning = false;
+	private bool P1_m_Victory = false;
 
 	void Start ()
 	{
 		m_GameRunning = true;
 
-		if (m_GameOver != null)
+		if (P1_m_GameOver != null)
 		{
-			m_GameOver.enabled = false;
+			P1_m_GameOver.enabled = false;
 		}
 
-		if (m_Winner != null)
+		if (P1_m_Winner != null)
 		{
-			m_Winner.enabled = false;
+			P1_m_Winner.enabled = false;
 		}
 
+        if (P2_m_GameOver != null)
+        {
+            P2_m_GameOver.enabled = false;
+        }
 
-		if (m_Health == null)
+        if (P2_m_Winner != null)
+        {
+            P2_m_Winner.enabled = false;
+        }
+
+
+        if (p1_m_Health == null || p2_m_Health == null)
 		{
 			Debug.Log ("Inserisci il Prefab della vita nel GameObject");
 			return;
@@ -60,23 +80,31 @@ public class GameManager : MonoBehaviour
 		{
 
 			// se hai perso tutte le vite il gioco finisce
-			if (m_numLifes == 0)
+			if (P1_m_numLifes == 0 || P2_m_numLifes == 0)
 			{
-				m_Victory = false;
+                P1_m_Victory = false;
 				m_GameRunning = false;
 				EndGame();
 			}
 
-			if (m_timeBeforeLosingAnotherLife <= 0)
+			if (P1_m_timeBeforeLosingAnotherLife <= 0)
 			{
-				m_canYouLoseLife = true;
+                P1_m_canYouLoseLife = true;
 			}
 			else
 			{
-				m_timeBeforeLosingAnotherLife -= Time.deltaTime;
+				P1_m_timeBeforeLosingAnotherLife -= Time.deltaTime;
 			}
-			
-		}
+            if (P2_m_timeBeforeLosingAnotherLife <= 0)
+            {
+                P2_m_canYouLoseLife = true;
+            }
+            else
+            {
+                P2_m_timeBeforeLosingAnotherLife -= Time.deltaTime;
+            }
+
+        }
 		else
 		{
 			EndGame ();
@@ -96,37 +124,57 @@ public class GameManager : MonoBehaviour
 
 	public void setVictory(bool state)
 	{
-		m_Victory = state;
+        P1_m_Victory = state;
 	}
 
-	public void youLoseLife ()
+	public void youLoseLife (string player)
 	{
-		if (m_canYouLoseLife == true)
+		if (P1_m_canYouLoseLife == true)
 		{
-			m_timeBeforeLosingAnotherLife = m_safeTime;
-			m_canYouLoseLife = false;
-			--m_numLifes;
+			switch(player)
+			{
+                case "P1":
+                    P1_m_timeBeforeLosingAnotherLife = m_safeTime;
+                    P1_m_canYouLoseLife = false;
+                    --P1_m_numLifes;
 
-			m_Health.removeHeart ();
+                    p1_m_Health.removeHeart();
+                    break;
+                case "P2":
+                    P2_m_timeBeforeLosingAnotherLife = m_safeTime;
+                    P2_m_canYouLoseLife = false;
+                    --P2_m_numLifes;
+
+                    p2_m_Health.removeHeart();
+                    break;
+            }
 		}
 	}
 
 	private void EndGame()
 	{
-		if (m_Victory)
+		if (P1_m_Victory)
 		{
-			if (m_Winner != null)
+			if (P1_m_Winner != null)
 			{
-				m_Winner.enabled = true;
+				P1_m_Winner.enabled = true;
 			}
-		}
+            if (P2_m_GameOver != null)
+            {
+                P2_m_GameOver.enabled = true;
+            }
+        }
 		else
 		{
-			if (m_GameOver != null)
+			if (P1_m_GameOver != null)
 			{
-				m_GameOver.enabled = true;
+				P1_m_GameOver.enabled = true;
 			}
-		}
+            if (P2_m_Winner != null)
+            {
+                P2_m_Winner.enabled = true;
+            }
+        }
 		Time.timeScale = 0f;
 
 	}
