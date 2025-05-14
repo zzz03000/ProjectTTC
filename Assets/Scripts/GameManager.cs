@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 		Blocks_Generator generator = GameObject.Find("GameManager").GetComponent<Blocks_Generator>();
-		generator.GenerateBlock ();
+		generator.GenerateBlock("Start");
 		Time.timeScale = 1f;
 
 	}
