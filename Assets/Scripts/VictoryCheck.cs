@@ -13,7 +13,7 @@ public class VictoryCheck : MonoBehaviour
 		RaycastHit2D colpito = Physics2D.Raycast (new Vector2 (12f, transform.position.y-0.15f), Vector2.left, 30f, m_LayerMask);
 		if (colpito.collider != null)
 		{
-			if(colpito.collider.gameObject.tag.Equals("Block"))
+			if(colpito.collider.gameObject.tag.Equals("P1_Block"))
 			{
 				if (!(colpito.collider.gameObject.GetComponent<Block_OnFalling>().enabled) && m_GameManager!=null)
 				{
@@ -21,6 +21,14 @@ public class VictoryCheck : MonoBehaviour
 					m_GameManager.GetComponent<GameManager> ().setVictory (true);
 				}
 			}
-		}
+			else if (colpito.collider.gameObject.tag.Equals("P2_Block"))
+            {
+                if (!(colpito.collider.gameObject.GetComponent<Block_OnFalling>().enabled) && m_GameManager != null)
+                {
+                    m_GameManager.GetComponent<GameManager>().setGameRunning(false);
+                    m_GameManager.GetComponent<GameManager>().setVictory(false);
+                }
+            }
+        }
 	}
 }

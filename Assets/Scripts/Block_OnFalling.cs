@@ -32,8 +32,27 @@ public class Block_OnFalling : MonoBehaviour
 		m_GameManager = GameObject.Find ("GameManager");
 	}
 
-	// Update is called once per frame
-	void FixedUpdate ()
+    private void Update()
+    {
+        if(gameObject.tag == "P1_Block")
+        {
+            // 회전 (Space)
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                gameObject.transform.Rotate(new Vector3(0f, 0f, +90f));
+            }
+        }
+        else if (gameObject.tag == "P2_Block")
+        {
+            // 회전 (RightShift)
+            if (Input.GetKeyDown(KeyCode.RightShift))
+            {
+                gameObject.transform.Rotate(new Vector3(0f, 0f, +90f));
+            }
+        }
+    }
+    // Update is called once per frame
+    void FixedUpdate ()
 	{
 		Vector3 position = transform.position;
 		position += m_ActualFallingSpeed * Vector3.down * Time.fixedDeltaTime;
@@ -72,11 +91,7 @@ public class Block_OnFalling : MonoBehaviour
                     countStopFramesStep++;
                 }
             }
-            // 회전 (W)
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                gameObject.transform.Rotate(new Vector3(0f, 0f, +90f));
-            }
+            
             // 빠른 하강 (S)
             if (Input.GetKey(KeyCode.S))
             {
@@ -85,8 +100,8 @@ public class Block_OnFalling : MonoBehaviour
         }
         else if (gameObject.tag == "P2_Block")
         {
-            // 좌측 이동 (LeftArrow)
-            if (Input.GetKey(KeyCode.LeftArrow))
+            // 좌측 이동 (J)
+            if (Input.GetKey(KeyCode.J))
             {
                 if (countStopFramesStep > m_StopFramesStep)
                 {
@@ -99,8 +114,8 @@ public class Block_OnFalling : MonoBehaviour
                     countStopFramesStep++;
                 }
             }
-            // 우측 이동 (RightArrow)
-            if (Input.GetKey(KeyCode.RightArrow))
+            // 우측 이동 (L)
+            if (Input.GetKey(KeyCode.L))
             {
                 if (countStopFramesStep > m_StopFramesStep)
                 {
@@ -113,13 +128,8 @@ public class Block_OnFalling : MonoBehaviour
                     countStopFramesStep++;
                 }
             }
-            // 회전 (UpArrow)
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                gameObject.transform.Rotate(new Vector3(0f, 0f, +90f));
-            }
-            // 빠른 하강 (DownArrow)
-            if (Input.GetKey(KeyCode.DownArrow))
+            // 빠른 하강 (K)
+            if (Input.GetKey(KeyCode.K))
             {
                 m_ActualFallingSpeed *= m_Acceleration;
             }

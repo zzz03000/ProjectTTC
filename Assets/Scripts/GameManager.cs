@@ -80,14 +80,20 @@ public class GameManager : MonoBehaviour
 		{
 
 			// se hai perso tutte le vite il gioco finisce
-			if (P1_m_numLifes == 0 || P2_m_numLifes == 0)
+			if (P1_m_numLifes == 0)
 			{
                 P1_m_Victory = false;
 				m_GameRunning = false;
 				EndGame();
 			}
+            if (P2_m_numLifes == 0)
+			{
+                P1_m_Victory = true;
+                m_GameRunning = false;
+                EndGame();
+            }
 
-			if (P1_m_timeBeforeLosingAnotherLife <= 0)
+            if (P1_m_timeBeforeLosingAnotherLife <= 0)
 			{
                 P1_m_canYouLoseLife = true;
 			}
