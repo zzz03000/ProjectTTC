@@ -16,7 +16,7 @@ public class Block_OnFalling : MonoBehaviour
     private bool repeatGeneration = true;
 
     private BlockInfo blockInfo;
-
+    private bool hasProcessedInteraction = false;
     void Awake()
     {
         Rigidbody2D myRB2D = GetComponent<Rigidbody2D>();
@@ -109,39 +109,10 @@ public class Block_OnFalling : MonoBehaviour
 
         switch (blockInfo.blockType)
         {
-            case BlockInfo.BlockType.Block1:
-            case BlockInfo.BlockType.Block2:
-                BlockInfo otherInfo1 = other.gameObject.GetComponent<BlockInfo>();
-                if (otherInfo1 != null && ((blockInfo.blockType == BlockInfo.BlockType.Block1 && otherInfo1.blockType == BlockInfo.BlockType.Block2) || (blockInfo.blockType == BlockInfo.BlockType.Block2 && otherInfo1.blockType == BlockInfo.BlockType.Block1)))
-                {
-                    Destroy(gameObject);
-                    Destroy(other.gameObject);
-                    processed = true;
-                }
-                break;
-
-            case BlockInfo.BlockType.Block3:
-            case BlockInfo.BlockType.Block4:
+            case BlockInfo.BlockType.FireBlock:
+            case BlockInfo.BlockType.IceBlock:
                 BlockInfo otherInfo = other.gameObject.GetComponent<BlockInfo>();
-                if (otherInfo != null)
-                {
-                    bool isMergeable =
-                        (blockInfo.blockType == BlockInfo.BlockType.Block3 && otherInfo.blockType == BlockInfo.BlockType.Block4) ||
-                        (blockInfo.blockType == BlockInfo.BlockType.Block4 && otherInfo.blockType == BlockInfo.BlockType.Block3);
-
-                    if (isMergeable)
-                    {
-                        FixedJoint2D joint = gameObject.AddComponent<FixedJoint2D>();
-                        joint.connectedBody = other.rigidbody;
-                        processed = true;
-                    }
-                }
-                break;
-
-            case BlockInfo.BlockType.Block5:
-            case BlockInfo.BlockType.Block6:
-                BlockInfo otherInfo2 = other.gameObject.GetComponent<BlockInfo>();
-                if (otherInfo2 != null && ((blockInfo.blockType == BlockInfo.BlockType.Block5 && otherInfo2.blockType == BlockInfo.BlockType.Block6) || (blockInfo.blockType == BlockInfo.BlockType.Block6 && otherInfo2.blockType == BlockInfo.BlockType.Block5)))
+                if (otherInfo != null && ((blockInfo.blockType == BlockInfo.BlockType.FireBlock && otherInfo.blockType == BlockInfo.BlockType.IceBlock) || (blockInfo.blockType == BlockInfo.BlockType.IceBlock && otherInfo.blockType == BlockInfo.BlockType.FireBlock)))
                 {
                     if (block7Prefab != null)
                     {
@@ -153,6 +124,63 @@ public class Block_OnFalling : MonoBehaviour
                     }
                     Destroy(gameObject);
                     Destroy(other.gameObject);
+                    processed = true;
+                }
+                break;
+
+            case BlockInfo.BlockType.LeafBlock:
+            case BlockInfo.BlockType.WoodBlock:
+                BlockInfo otherInfo1 = other.gameObject.GetComponent<BlockInfo>();
+                if (otherInfo1 != null &&
+                    ((blockInfo.blockType == BlockInfo.BlockType.LeafBlock && otherInfo1.blockType == BlockInfo.BlockType.WoodBlock) ||
+                     (blockInfo.blockType == BlockInfo.BlockType.WoodBlock && otherInfo1.blockType == BlockInfo.BlockType.LeafBlock)))
+                {
+                    if (block7Prefab != null)
+                    {
+                        string newTag = gameObject.tag == "P1_Block" ? "P1_Block" : "P2_Block";
+                        Vector3 spawnPosition = (blockInfo.blockType == BlockInfo.BlockType.WoodBlock) ? transform.position : other.transform.position;
+                        GameObject newBlock7 = Instantiate(block7Prefab, spawnPosition, Quaternion.identity);
+                        newBlock7.tag = newTag;
+                        repeatGeneration = false;
+                        this.enabled = false;
+                    }
+
+                    // 나무 블록만 파괴
+                    if (blockInfo.blockType == BlockInfo.BlockType.WoodBlock)
+                    {
+                        Destroy(gameObject);
+                    }
+                    else if (otherInfo1.blockType == BlockInfo.BlockType.WoodBlock)
+                    {
+                        Destroy(other.gameObject);
+                    }
+
+                    Rigidbody2D rb = (blockInfo.blockType == BlockInfo.BlockType.LeafBlock) ? GetComponent<Rigidbody2D>() : other.gameObject.GetComponent<Rigidbody2D>();
+                    if (rb != null)
+                    {
+                        rb.WakeUp();
+                        rb.velocity = Vector2.zero;
+                        rb.AddForce(Vector2.down * 0.5f, ForceMode2D.Impulse);
+                    }
+
+                    processed = true;
+                }
+                break;
+
+
+            case BlockInfo.BlockType.RockBlock:
+            case BlockInfo.BlockType.WaterBlock:
+                BlockInfo otherInfo2 = other.gameObject.GetComponent<BlockInfo>();
+                if (otherInfo2 != null && ((blockInfo.blockType == BlockInfo.BlockType.RockBlock && otherInfo2.blockType == BlockInfo.BlockType.WaterBlock) || (blockInfo.blockType == BlockInfo.BlockType.WaterBlock && otherInfo2.blockType == BlockInfo.BlockType.RockBlock)))
+                {
+                    if (blockInfo.blockType == BlockInfo.BlockType.RockBlock)
+                    {
+                        Destroy(gameObject);
+                    }
+                    else if (otherInfo2.blockType == BlockInfo.BlockType.RockBlock)
+                    {
+                        Destroy(other.gameObject);
+                    }
                     processed = true;
                 }
                 break;
