@@ -16,7 +16,7 @@ public class Block_OnFalling : MonoBehaviour
     private bool repeatGeneration = true;
 
     private BlockInfo blockInfo;
-    private bool hasProcessedInteraction = false;
+
     void Awake()
     {
         Rigidbody2D myRB2D = GetComponent<Rigidbody2D>();
@@ -182,6 +182,26 @@ public class Block_OnFalling : MonoBehaviour
                         Destroy(other.gameObject);
                     }
                     processed = true;
+                }
+                break;
+
+            case BlockInfo.BlockType.ThunderBlock: // 여기에 추가
+                if (other.gameObject.CompareTag("P1_Block") || other.gameObject.CompareTag("P2_Block") ||
+                    other.gameObject.CompareTag("P1_Base") || other.gameObject.CompareTag("P2_Base") ||
+                    other.gameObject.CompareTag("P1_Limite") || other.gameObject.CompareTag("P2_Limite"))
+                {
+                    if (m_GameManager != null)
+                    {
+                        GameManager gm = m_GameManager.GetComponent<GameManager>();
+                        Blocks_Generator generator = m_GameManager.GetComponent<Blocks_Generator>();
+
+                        string thisTag = gameObject.tag;
+                        string opponentTag = (thisTag == "P1_Block") ? "P2_Block" : "P1_Block";
+
+                        // 상대 블록 강제 변경
+                        gm.ForceChangeCurrentBlock(opponentTag, generator.GetBlockPrefabs());
+                        Debug.Log("1213");
+                    }
                 }
                 break;
         }

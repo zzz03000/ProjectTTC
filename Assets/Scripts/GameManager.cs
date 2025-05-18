@@ -37,7 +37,10 @@ public class GameManager : MonoBehaviour
     private bool m_GameRunning = false;
 	private bool P1_m_Victory = false;
 
-	void Start ()
+    private GameObject currentP1Block = null;
+    private GameObject currentP2Block = null;
+
+    void Start ()
 	{
 		m_GameRunning = true;
 
@@ -184,4 +187,50 @@ public class GameManager : MonoBehaviour
 		Time.timeScale = 0f;
 
 	}
+    public void SetCurrentBlock(string tag, GameObject block)
+    {
+        if (tag == "P1_Block")
+            currentP1Block = block;
+        else if (tag == "P2_Block")
+            currentP2Block = block;
+    }
+
+    public GameObject GetCurrentBlock(string tag)
+    {
+        return tag == "P1_Block" ? currentP1Block :
+               tag == "P2_Block" ? currentP2Block : null;
+    }
+
+    public void ForceChangeCurrentBlock(string playerTag, GameObject[] blockPrefabs)
+    {
+        GameObject currentBlock = playerTag == "P1_Block" ? currentP1Block : currentP2Block;
+
+        if (currentBlock == null) return;
+
+        Vector3 position = currentBlock.transform.position;
+        Quaternion rotation = currentBlock.transform.rotation;
+        Destroy(currentBlock);
+
+        int newIndex = Random.Range(0, blockPrefabs.Length);
+        GameObject newBlock = Instantiate(blockPrefabs[newIndex], position, rotation);
+        newBlock.tag = playerTag;
+
+        // 비활성화 후 조금 뒤에 다시 활성화
+        newBlock.GetComponent<Block_OnFalling>().enabled = false;
+        StartCoroutine(EnableBlockAfterDelay(newBlock, 0.1f));
+
+        if (playerTag == "P1_Block")
+            currentP1Block = newBlock;
+        else
+            currentP2Block = newBlock;
+
+        Debug.Log("이 블록이 부딪혔음: " + gameObject.name);
+    }
+
+    private IEnumerator EnableBlockAfterDelay(GameObject block, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (block != null)
+            block.GetComponent<Block_OnFalling>().enabled = true;
+    }
 }
