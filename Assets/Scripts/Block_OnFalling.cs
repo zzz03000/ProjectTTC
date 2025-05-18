@@ -1,163 +1,189 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Block_OnFalling : MonoBehaviour
 {
+    [SerializeField] private float m_FallingSpeed = 1.5f;
+    [SerializeField] private float m_Acceleration = 2f;
+    [SerializeField] private float m_MovementSpeed = 10f;
+    [SerializeField] private int m_StopFramesStep = 1;
 
-	[SerializeField]
-	private float m_FallingSpeed = 1.5f;
-	private float m_ActualFallingSpeed = 0f;
+    [SerializeField] private GameObject m_GameManager = null;
+    [SerializeField] private GameObject block7Prefab = null; // Prefabs 안의 Block7 연결
 
-	[SerializeField]
-	private float m_Acceleration = 2f;
+    private float m_ActualFallingSpeed = 0f;
+    private int countStopFramesStep = 0;
+    private bool m_Collided = false;
+    private bool repeatGeneration = true;
 
-	[SerializeField]
-	private GameObject m_GameManager = null;
+    private BlockInfo blockInfo;
 
-	private bool m_Collided = false;
-
-	[SerializeField]
-	private float m_MovementSpeed = 10f;
-
-	[SerializeField]
-	private int m_StopFramesStep = 1;
-	private int countStopFramesStep = 0;
-
-	private bool repeatGeneration = true;
-
-	void Awake()
-	{
-		Rigidbody2D myRB2D = GetComponent<Rigidbody2D> ();
-		myRB2D.gravityScale = 0f;
-		m_GameManager = GameObject.Find ("GameManager");
-	}
-
-    private void Update()
+    void Awake()
     {
-        if(gameObject.tag == "P1_Block")
+        Rigidbody2D myRB2D = GetComponent<Rigidbody2D>();
+        myRB2D.gravityScale = 0f;
+        m_GameManager = GameObject.Find("GameManager");
+
+        blockInfo = GetComponent<BlockInfo>();
+        if (blockInfo == null)
         {
-            // 회전 (Space)
+            Debug.LogWarning("BlockInfo 컴포넌트가 없습니다.");
+        }
+    }
+
+    void Update()
+    {
+        if (gameObject.tag == "P1_Block")
+        {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                gameObject.transform.Rotate(new Vector3(0f, 0f, +90f));
+                transform.Rotate(0f, 0f, 90f);
             }
         }
         else if (gameObject.tag == "P2_Block")
         {
-            // 회전 (RightShift)
             if (Input.GetKeyDown(KeyCode.RightShift))
             {
-                gameObject.transform.Rotate(new Vector3(0f, 0f, +90f));
+                transform.Rotate(0f, 0f, 90f);
             }
         }
     }
-    // Update is called once per frame
-    void FixedUpdate ()
-	{
-		Vector3 position = transform.position;
-		position += m_ActualFallingSpeed * Vector3.down * Time.fixedDeltaTime;
-		transform.position = position;
 
-		m_ActualFallingSpeed = m_FallingSpeed;
-		position = transform.position;
+    void FixedUpdate()
+    {
+        Vector3 position = transform.position;
+        position += m_ActualFallingSpeed * Vector3.down * Time.fixedDeltaTime;
+        transform.position = position;
+
+        m_ActualFallingSpeed = m_FallingSpeed;
 
         if (gameObject.tag == "P1_Block")
         {
-            // 좌측 이동 (A)
-            if (Input.GetKey(KeyCode.A))
-            {
-                if (countStopFramesStep > m_StopFramesStep)
-                {
-                    position.x -= m_MovementSpeed * Time.deltaTime;
-                    gameObject.transform.position = position;
-                    countStopFramesStep = 0;
-                }
-                else
-                {
-                    countStopFramesStep++;
-                }
-            }
-            // 우측 이동 (D)
-            if (Input.GetKey(KeyCode.D))
-            {
-                if (countStopFramesStep > m_StopFramesStep)
-                {
-                    position.x += m_MovementSpeed * Time.deltaTime;
-                    gameObject.transform.position = position;
-                    countStopFramesStep = 0;
-                }
-                else
-                {
-                    countStopFramesStep++;
-                }
-            }
-            
-            // 빠른 하강 (S)
-            if (Input.GetKey(KeyCode.S))
-            {
-                m_ActualFallingSpeed *= m_Acceleration;
-            }
+            HandleMovement(KeyCode.A, KeyCode.D, KeyCode.S);
         }
         else if (gameObject.tag == "P2_Block")
         {
-            // 좌측 이동 (J)
-            if (Input.GetKey(KeyCode.J))
-            {
-                if (countStopFramesStep > m_StopFramesStep)
-                {
-                    position.x -= m_MovementSpeed * Time.deltaTime;
-                    gameObject.transform.position = position;
-                    countStopFramesStep = 0;
-                }
-                else
-                {
-                    countStopFramesStep++;
-                }
-            }
-            // 우측 이동 (L)
-            if (Input.GetKey(KeyCode.L))
-            {
-                if (countStopFramesStep > m_StopFramesStep)
-                {
-                    position.x += m_MovementSpeed * Time.deltaTime;
-                    gameObject.transform.position = position;
-                    countStopFramesStep = 0;
-                }
-                else
-                {
-                    countStopFramesStep++;
-                }
-            }
-            // 빠른 하강 (K)
-            if (Input.GetKey(KeyCode.K))
-            {
-                m_ActualFallingSpeed *= m_Acceleration;
-            }
+            HandleMovement(KeyCode.J, KeyCode.L, KeyCode.K);
         }
     }
 
-	void OnCollisionEnter2D (Collision2D other)
-	{
-		if (m_Collided)
-			return;
+    private void HandleMovement(KeyCode left, KeyCode right, KeyCode down)
+    {
+        Vector3 position = transform.position;
 
-		m_Collided = true;
+        if (Input.GetKey(left))
+        {
+            if (countStopFramesStep > m_StopFramesStep)
+            {
+                position.x -= m_MovementSpeed * Time.deltaTime;
+                transform.position = position;
+                countStopFramesStep = 0;
+            }
+            else countStopFramesStep++;
+        }
 
-		if(other.gameObject.tag.Equals("P1_Block") || other.gameObject.tag.Equals("P2_Block") || 
-			other.gameObject.tag.Equals("P1_Base") || other.gameObject.tag.Equals("P2_Base") ||
-			other.gameObject.tag.Equals("P1_Limite") || other.gameObject.tag.Equals("P2_Limite"))
-		{
-			Rigidbody2D myRB2D = GetComponent<Rigidbody2D> ();
-			myRB2D.gravityScale = 1f;
+        if (Input.GetKey(right))
+        {
+            if (countStopFramesStep > m_StopFramesStep)
+            {
+                position.x += m_MovementSpeed * Time.deltaTime;
+                transform.position = position;
+                countStopFramesStep = 0;
+            }
+            else countStopFramesStep++;
+        }
 
-            string tag = other.gameObject.tag;
-            if (m_GameManager!=null && repeatGeneration)
-			{
-				Blocks_Generator generator = m_GameManager.GetComponent<Blocks_Generator>();
-				generator.GenerateBlock(tag);
-				repeatGeneration = false;
-			}
-			this.enabled = false;
-		}
-	}
+        if (Input.GetKey(down))
+        {
+            m_ActualFallingSpeed *= m_Acceleration;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (m_Collided || blockInfo == null)
+            return;
+
+        m_Collided = true;
+
+        bool processed = false;
+
+        switch (blockInfo.blockType)
+        {
+            case BlockInfo.BlockType.Block1:
+            case BlockInfo.BlockType.Block2:
+                BlockInfo otherInfo1 = other.gameObject.GetComponent<BlockInfo>();
+                if (otherInfo1 != null && ((blockInfo.blockType == BlockInfo.BlockType.Block1 && otherInfo1.blockType == BlockInfo.BlockType.Block2) || (blockInfo.blockType == BlockInfo.BlockType.Block2 && otherInfo1.blockType == BlockInfo.BlockType.Block1)))
+                {
+                    Destroy(gameObject);
+                    Destroy(other.gameObject);
+                    processed = true;
+                }
+                break;
+
+            case BlockInfo.BlockType.Block3:
+            case BlockInfo.BlockType.Block4:
+                BlockInfo otherInfo = other.gameObject.GetComponent<BlockInfo>();
+                if (otherInfo != null)
+                {
+                    bool isMergeable =
+                        (blockInfo.blockType == BlockInfo.BlockType.Block3 && otherInfo.blockType == BlockInfo.BlockType.Block4) ||
+                        (blockInfo.blockType == BlockInfo.BlockType.Block4 && otherInfo.blockType == BlockInfo.BlockType.Block3);
+
+                    if (isMergeable)
+                    {
+                        FixedJoint2D joint = gameObject.AddComponent<FixedJoint2D>();
+                        joint.connectedBody = other.rigidbody;
+                        processed = true;
+                    }
+                }
+                break;
+
+            case BlockInfo.BlockType.Block5:
+            case BlockInfo.BlockType.Block6:
+                BlockInfo otherInfo2 = other.gameObject.GetComponent<BlockInfo>();
+                if (otherInfo2 != null && ((blockInfo.blockType == BlockInfo.BlockType.Block5 && otherInfo2.blockType == BlockInfo.BlockType.Block6) || (blockInfo.blockType == BlockInfo.BlockType.Block6 && otherInfo2.blockType == BlockInfo.BlockType.Block5)))
+                {
+                    if (block7Prefab != null)
+                    {
+                        string newTag = gameObject.tag == "P1_Block" ? "P1_Block" : "P2_Block";
+                        GameObject newBlock7 = Instantiate(block7Prefab, transform.position, Quaternion.identity);
+                        newBlock7.tag = newTag;
+                        repeatGeneration = false;
+                        this.enabled = false;
+                    }
+                    Destroy(gameObject);
+                    Destroy(other.gameObject);
+                    processed = true;
+                }
+                break;
+        }
+
+        if ((other.gameObject.CompareTag("P1_Block") || other.gameObject.CompareTag("P2_Block") ||
+             other.gameObject.CompareTag("P1_Base") || other.gameObject.CompareTag("P2_Base") ||
+             other.gameObject.CompareTag("P1_Limite") || other.gameObject.CompareTag("P2_Limite")) && repeatGeneration)
+        {
+            GetComponent<Rigidbody2D>().gravityScale = 1f;
+
+            if (m_GameManager != null)
+            {
+                Blocks_Generator generator = m_GameManager.GetComponent<Blocks_Generator>();
+                generator.GenerateBlock(gameObject.tag);
+                repeatGeneration = false;
+            }
+
+            this.enabled = false;
+        }
+
+        if (processed && repeatGeneration)
+        {
+            if (m_GameManager != null)
+            {
+                Blocks_Generator generator = m_GameManager.GetComponent<Blocks_Generator>();
+                generator.GenerateBlock(gameObject.tag);
+                repeatGeneration = false;
+            }
+
+            this.enabled = false;
+        }
+    }
 }
