@@ -1,10 +1,10 @@
-# 🕹️ [게임 이름] - Project TrickyTowersClone
+# 🕹️ [게임 이름] - ElemetalUP
 
 > 🎮 [간단한 한 줄 설명: 블록 쌓기 장르 게임]
 
 ## 📌 개요
 
-TrickyTowersClone은(는) Unity로 개발된 블록 쌓기 장르의 게임입니다.
+ElemetalUP은(는) Unity로 개발된 블록 쌓기 장르의 게임입니다.
 트리키 타워 클론을 가져와서 여러 기능을 추가 및 개발을 하였습니다.
 이 프로젝트는 대학 친구들과 함께 팀으로 개발했으며, 저는 주로 시스템 프로그램을 담당했습니다.
 
@@ -23,7 +23,6 @@ TrickyTowersClone은(는) Unity로 개발된 블록 쌓기 장르의 게임입�
 ## ✨ 주요 기능
 
 - ✅ [예: 각 속성에 따른 블록 생성/삭제 및 물리 기반 퍼즐]
-
-<img src="img1.png">
-<img src="img2.png">
-<img src="img3.png">
+- 
+<img width="1000" height="563" alt="메인 메뉴" src="https://github.com/user-attachments/assets/526345b3-89c5-4c43-a883-f80522618d00" />
+<img width="1003" height="565" alt="image" src="https://github.com/user-attachments/assets/11c76226-b373-42c1-bc42-06489730f451" />
