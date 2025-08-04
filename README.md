@@ -1,7 +1,29 @@
-# TrickyTowersClone
-Clone of Tricky Towers (with A LOT less features) made with Unity, a sort of Tetris but with physics<br>
-My very first Unity project. Made with a small team of 4 people in may 2018<br>
-Unity version: 2017.3.0f3
+# 🕹️ [게임 이름] - Project TrickyTowersClone
+
+> 🎮 [간단한 한 줄 설명: 블록 쌓기 장르 게임]
+
+## 📌 개요
+
+TrickyTowersClone은(는) Unity로 개발된 블록 쌓기 장르의 게임입니다.
+트리키 타워 클론을 가져와서 여러 기능을 추가 및 개발을 하였습니다.
+이 프로젝트는 대학 친구들과 함께 팀으로 개발했으며, 저는 주로 시스템 프로그램을 담당했습니다.
+
+- ⏳ 개발 기간: [예: 2025년 4월 ~ 2025년 5월]
+- 👥 팀 인원: 3명
+- ⚙️ 개발 도구: Unity, C#, GitHub
+- 🎯 주요 목표: 트리키 타워에서 한층 더 재밌는 요소를 가한 게임
+
+## 🧑‍💻 담당 역할
+
+| 역할 | 설명 |
+|------|------|
+| 🎮 게임 시스템 구현 | 속성 블록 생성 및 속성에 따른 기능 구현 |
+| 🧪 테스트 및 디버깅 | 게임 기능 테스트, 버그 수정 |
+
+## ✨ 주요 기능
+
+- ✅ [예: 각 속성에 따른 블록 생성/삭제 및 물리 기반 퍼즐]
+
 <img src="img1.png">
 <img src="img2.png">
 <img src="img3.png">
